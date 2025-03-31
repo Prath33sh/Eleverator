@@ -11,7 +11,7 @@ const Direction = {
     Up: 1
 };
 
-const MAX_OCCUPANCY = 10;
+const MAX_OCCUPANCY = 10; // Currently unused
 
 export class Elevator {
     constructor(floor, occupancy, state) {

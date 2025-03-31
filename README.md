@@ -3,7 +3,7 @@
 ## Working principle
 
 It uses the javascript concept of Workers to process the elevator logic while keeping the main thread open to accept new inputs or publishing status messages.
-There is also a continuous message loop that sends events back and forth between the main thread and the workers.
+There is also a continuous message loop that sends events back and forth between the main thread and the workers. The messages are transferred using the parentport and worker message handlers.
 In this simplified example there is only a single worker but it can be extended to multiple and additional load balancing code can be added.
 For the sake of simulation there is map that keeps track of the floor requests and a few user destination inputs at each floor. Also this initial version does not take into account the user inputs of pressing up/down buttons. 
 It is deduced from the user input. The initial version also diregards capacity.
@@ -39,7 +39,7 @@ The elevator has the following actions that it performs:
 This is the controller or entry point of the simulator. While in a real world example (or a UI) we should be expecting actual user inputs for the ease of verification we use a map of inputs.
 A bunch of sample inputs are given. This file is also responsible for the creation of a worker and passing of user inputs initially to simpulate elevator requests and also for entering user destination requests.
 
-### Elevator.js
+### elevator.js
 
 This is the worker thread. It listens for various user inputs and also posts messages back to the main thread for the following:
 1. Status messages to keep track of the elevator status at any given point.

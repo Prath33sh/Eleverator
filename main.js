@@ -4,12 +4,12 @@ import { Worker } from 'worker_threads';
 const userInputs = new Map();
 userInputs.set(0, [4, 5, 3, 7, 9]);
 userInputs.set(2, [1, 5, 5, 7, 9]);
-userInputs.set(5, [3, 7, 9]);
+/*userInputs.set(5, [3, 7, 9]);
 userInputs.set(3, [6, 5, 3, 4, 9]);
 userInputs.set(8, [9, 5, 3, 7, 9]);
 userInputs.set(4, [4, 2, 8, 6]);
 userInputs.set(1, [3]);
-userInputs.set(7, [1, 5, 3, 7, 9]);
+userInputs.set(7, [1, 5, 3, 7, 9]);*/
 
 const inputTracker = new Set();
 
@@ -26,14 +26,24 @@ function getElevatoreState(state){
     }
 }
 
+const randomizeInput = false;
+
 async function run(){
     console.log('Starting elevator simulation...');
     const worker = new Worker('./elevator.js');
-    Array.from(userInputs.keys()).forEach(async input => {
-        await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 3000) + 1000));
-        console.log(`===> User inputs for floor ${input}: ${userInputs.get(input).join(', ')}`);
-        worker.postMessage({ data: {type: 'openRequest', userFloor: input}});
-    });
+    if (randomizeInput) {
+        Array.from(userInputs.keys()).forEach(async input => {
+            await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 3000) + 1000));
+            console.log(`===> User inputs for floor ${input}: ${userInputs.get(input).join(', ')}`);
+            worker.postMessage({ data: {type: 'openRequest', userFloor: input}});
+        });
+    } else {
+        for (const input of userInputs.keys()) {
+            await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 3000) + 1000));
+            console.log(`===> User inputs for floor ${input}: ${userInputs.get(input).join(', ')}`);
+            worker.postMessage({ data: {type: 'openRequest', userFloor: input}});
+        }
+    }
     
     worker.on('message', async (event) => {
         const { event: eventType, data: elevator } = event;

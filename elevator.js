@@ -19,7 +19,7 @@ export class Elevator {
         this.occupancy = occupancy;
         this.state = state;
         this.upwardList = [0];
-        this.downwardList = [0];
+        this.downwardList = [];
         this.direction = Direction.Up; // Initial state
     }
 
@@ -51,16 +51,10 @@ export class Elevator {
         return this.state !== State.Error && this.occupancy < MAX_OCCUPANCY;
     }
 
-
-
     openRequest(userFloor) {
         let direction;
-        let diff = this.floor - userFloor;
-        if (diff === 0) {
-            console.log(`Elevator open at Floor: ${this.floor}.`);
-            parentPort.postMessage({event: 'doorOpen', data: this});
-            return;
-        } else if (diff > 0) {
+        let diff = userFloor - this.floor;
+         if (diff > 0) {
             direction = Direction.Up;
         } else {
             direction = Direction.Down;
@@ -100,7 +94,7 @@ export class Elevator {
             }
         
             if (userFloor !== this.floor) {
-            console.log(`Elevator in use. Please wait. You are at: ${userFloor}, elevator at: ${this.floor}`);
+            console.log(`Elevator in use. User destination added: ${userFloor}, elevator at: ${this.floor}`);
             this.addToWaitList(userFloor, direction);
             continue;
             }
@@ -185,6 +179,12 @@ parentPort.on('message', async (event) => {
         }
         case 'openRequest': {
             console.log(`User requested elevator at Floor: ${data.userFloor}`);
+            // Check if the elevator is already at the requested floor
+            if (data.userFloor === elevator.floor) {
+                console.log(`Elevator open at Floor: ${elevator.floor}.`);
+                parentPort.postMessage({event: 'doorOpen', data: elevator});
+                return;
+            }
             elevator.openRequest(data.userFloor);
             if (elevator.state === State.Stopped) {
                 elevator.setState(State.Running); // Change state to Running if we have a valid request

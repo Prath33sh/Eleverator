@@ -1,0 +1,11 @@
+{
+  "name": "project-name",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "jest": "^27.5.1"
+  }
+}

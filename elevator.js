@@ -1,6 +1,6 @@
 import { parentPort } from 'worker_threads';
 
-const State = {
+export const State = {
     Error: -1,
     Stopped: 0,
     Running: 1 
@@ -18,9 +18,10 @@ export class Elevator {
         this.floor = floor;
         this.occupancy = occupancy;
         this.state = state;
-        this.upwardList = [0];
+        this.upwardList = [];
         this.downwardList = [];
-        this.direction = Direction.Up; // Initial state
+        this.direction = floor > 0 ? Direction.Down : Direction.Up; // Initial state
+        this.addToWaitList(floor, this.direction); // Add the initial floor to the wait list
     }
 
     onDestination(floor, direction) {

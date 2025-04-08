@@ -51,3 +51,10 @@ This is the worker thread. It listens for various user inputs and also posts mes
 3. Multiple workers and advanced synchronization for efficient elevator system.
 4. A UI based simulator to demonstrate the actual workflow.
 
+## Tests
+Tests are based on Jest.
+To run tests
+```
+npm run tests
+```
+
